@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const game = document.querySelector("#game");
     const scoreDisplay = document.querySelector('#score');
+    let score = 0;
 
     const genres = [
         {
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         levels.forEach(level => {
             const card = document.createElement('div')
             card.classList.add('card')
+            card.setAttribute('data-active', 'true')
             column.append(card)
 
             if (level === 'easy') {
@@ -53,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.setAttribute('data-answer', data.results[0].correct_answer)
                     card.setAttribute('data-value', card.getInnerHTML())
                     })
-            card.addEventListener('click', flipCard) 
+            .then(done => card.addEventListener('click', flipCard))
         })
 
 
@@ -64,6 +66,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function flipCard() {
         console.log('Clicked')
+        this.style.fontSize = 15 + 'px';
+        const textDisplay = document.createElement('div')
+        const trueButton = document.createElement('button')
+        const falseButton = document.createElement('button')
+        trueButton.innerHTML = 'True'
+        falseButton.innerHTML = 'False'
+        trueButton.addEventListener('click', getResult)
+        falseButton.addEventListener('click', getResult)
+        textDisplay.innerHTML = this.getAttribute('data-question')
+        this.append(textDisplay, trueButton, falseButton)
+
+        const allCards = Array.from(document.querySelectorAll('.card'))
+        allCards.forEach(card => card.removeEventListener('click', flipCard))
     }
+
+    function getResult() {
+        const allCards = Array.from(document.querySelectorAll('.card'))
+        const activeCards = allCards.filter(card => card.getAttribute('data-active') == 'true')
+        activeCards.forEach(card => card.addEventListener('click', flipCard))
+        
+        const cardOfButton = this.parentElement
+        if (cardOfButton.getAttribute('data-answer') === this.innerHTML) {
+            console.log('It`s a match!')
+            score = score + parseInt(cardOfButton.getAttribute('data-value'))
+            scoreDisplay.innerHTML = score;
+            cardOfButton.classList.add('correct-answer')
+            cardOfButton.setAttribute('data-active', 'false')
+            setTimeout(() => {
+                while (cardOfButton.firstChild) {
+                    cardOfButton.removeChild(cardOfButton.lastChild)}
+            }, 100)
+            cardOfButton.innerHTML = cardOfButton.getAttribute('data-value')
+        } else {
+            console.log('Wrong!')
+            cardOfButton.classList.add('wrong-answer')
+            cardOfButton.setAttribute('data-active', 'false')
+            setTimeout(() => {
+                while (cardOfButton.firstChild) {
+                    cardOfButton.removeChild(cardOfButton.lastChild)}
+                    cardOfButton.innerHTML = 0
+            }, 100)
+        }
+        cardOfButton.removeEventListener('click', flipCard)
+        
+    }
+    
 
 })
