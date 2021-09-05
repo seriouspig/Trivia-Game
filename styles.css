@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(108, 108, 177);
+    color: white;
+    font-family: 'Trebuchet MS',Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#game {
+    display: flex;
+}
+
+.genre-column {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.card {
+    width: 200px;
+    height: 120px;
+    border-radius: 20px;
+    background-color: brown;
+    text-align: center;
+    padding: 5px;
+    margin: 10px;
+    border: darkblue solid 5px;
+    font-size: 60px;
+}
